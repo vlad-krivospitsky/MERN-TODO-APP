@@ -1,13 +1,103 @@
-body {
+* {
+  padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+  min-width: 100vw;
+  background-color: #3f5f8f;
+  font-family: monospace, serif;
+}
+
+.app {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.board {
+  min-width: 300px;
+  min-height: 400px;
+  padding: 20px 0;
+  margin: 30px;
+  border: 5px solid transparent;
+  border-radius: 12px;
+  background-color: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.board__title {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.board__item {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  cursor: grab;
+  background-color: #282d31;
+  color: #fff;
+}
+
+.board__footer {
+  margin-top: auto;
+  display: flex;
+  gap: 10px;
+}
+
+.board__footer input {
+  flex: 1;
+  padding: 5px;
+  border: 0;
+  border-radius: 5px;
+}
+
+button,
+input {
+  padding: 5px;
+  border: 0;
+  border-radius: 5px;
+}
+
+button {
+  font-family: inherit;
+  color: #fff;
+  background-color: #3f6b8f;
+  cursor: pointer;
+}
+
+button:hover,
+button:focus {
+  background-color: #629de9;
+}
+
+button:active {
+  background-color: #2e4e6b;
+}
+
+.new-board {
+  padding: 10px 20px;
+  background-color: #3487ca;
+}
+
+.delete-btn {
+  margin-left: 10px;
+}
+
+.btn-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
