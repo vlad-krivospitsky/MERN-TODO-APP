@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import TaskCard from './components/TaskCard';
 
 function App() {
   const [boards, setBoards] = useState([]);
@@ -136,26 +136,17 @@ function App() {
             <div className="board__title">{board.title}</div>
             <div className="board__items">
               {board.items.map((item) => (
-                <div
+                <TaskCard
                   key={item.id}
-                  className="board__item"
-                  draggable
-                  onDragOver={dragOverHandler}
-                  onDragLeave={dragLeaveHandler}
-                  onDragStart={(e) => dragStartHandler(e, board, item)}
-                  onDragEnd={dragEndHandler}
-                  onDrop={(e) => dropHandler(e, board, item)}
-                >
-                  <div className="btn-wrapper">
-                    <span>{item.title}</span>
-                    <button
-                      className="delete-btn"
-                      onClick={() => handleDeleteTask(board._id, item.id)}
-                    >
-                      <DeleteOutlineIcon />
-                    </button>
-                  </div>
-                </div>
+                  board={board}
+                  item={item}
+                  dragOverHandler={dragOverHandler}
+                  dragLeaveHandler={dragLeaveHandler}
+                  dragStartHandler={dragStartHandler}
+                  dragEndHandler={dragEndHandler}
+                  dropHandler={dropHandler}
+                  handleDeleteTask={handleDeleteTask}
+                />
               ))}
             </div>
             <div className="board__footer">
@@ -164,8 +155,18 @@ function App() {
                 value={taskInputs[board._id] || ''}
                 onChange={(e) => handleInputChange(board._id, e.target.value)}
                 placeholder="Add a task..."
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleAddTask(board._id);
+                  }
+                }}
               />
-              <button onClick={() => handleAddTask(board._id)}>+</button>
+              <button
+                className="add-btn"
+                onClick={() => handleAddTask(board._id)}
+              >
+                +
+              </button>
             </div>
           </div>
         ))}

@@ -20,17 +20,18 @@ body {
 }
 
 .board {
-  min-width: 300px;
+  min-width: 400px;
   min-height: 400px;
   padding: 20px 0;
   margin: 30px;
   border: 5px solid transparent;
   border-radius: 12px;
-  background-color: #000;
+  background-color: #0000004b;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   position: relative;
+  text-align: center;
 }
 
 .board__title {
@@ -40,8 +41,19 @@ body {
   color: #fff;
 }
 
+.board__items {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.board__items.drag-over {
+  margin-bottom: 20px;
+}
+
 .board__item {
-  width: 100%;
+  width: 95%;
   padding: 10px;
   margin: 5px 0;
   border: 2px solid transparent;
@@ -53,12 +65,13 @@ body {
 
 .board__footer {
   margin-top: auto;
+  margin-left: 10px;
   display: flex;
   gap: 10px;
 }
 
 .board__footer input {
-  flex: 1;
+  flex: 0.95;
   padding: 5px;
   border: 0;
   border-radius: 5px;
@@ -84,7 +97,7 @@ button:focus {
 }
 
 button:active {
-  background-color: #2e4e6b;
+  background-color: #355b7e;
 }
 
 .new-board {
@@ -95,9 +108,30 @@ button:active {
 .delete-btn {
   margin-left: 10px;
 }
+.delete-btn svg {
+  width: 0.6em;
+  height: 0.6em;
+}
 
 .btn-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.add-btn {
+  width: 2.5em;
+  font-size: 1.3em;
+  padding: 15px;
+}
+
+.btn-wrapper {
+  position: relative;
+}
+
+.delete-btn {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
