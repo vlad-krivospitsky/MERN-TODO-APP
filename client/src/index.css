@@ -135,3 +135,7 @@ button:active {
   top: 50%;
   transform: translateY(-50%);
 }
+
+.done-card {
+  text-decoration: line-through;
+}

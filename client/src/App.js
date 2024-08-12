@@ -122,7 +122,6 @@ function App() {
   const handleInputChange = (boardId, value) => {
     setTaskInputs((prev) => ({ ...prev, [boardId]: value }));
   };
-
   return (
     <div className="wrapper">
       <div className="app">
@@ -135,7 +134,7 @@ function App() {
           >
             <div className="board__title">{board.title}</div>
             <div className="board__items">
-              {board.items.map((item) => (
+              {board.items.map((item, index) => (
                 <TaskCard
                   key={item.id}
                   board={board}
@@ -146,6 +145,9 @@ function App() {
                   dragEndHandler={dragEndHandler}
                   dropHandler={dropHandler}
                   handleDeleteTask={handleDeleteTask}
+                  className={
+                    index === board.items.length - 1 ? 'done-card' : ''
+                  }
                 />
               ))}
             </div>
