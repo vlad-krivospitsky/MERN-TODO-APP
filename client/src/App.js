@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './App.css';
+import EditIcon from '@mui/icons-material/Edit';
 import TaskCard from './components/TaskCard';
+import { LOCALHOST } from './config';
+// import AuthForm from './components/AuthForm/AuthForm';
+import './App.css';
 
 function App() {
   const [boards, setBoards] = useState([]);
   const [currentBoard, setCurrentBoard] = useState(null);
   const [currentItem, setCurrentItem] = useState(null);
   const [taskInputs, setTaskInputs] = useState({});
+  const [isEditingTitle, setIsEditingTitle] = useState({});
+  const [newTitle, setNewTitle] = useState({});
+  const [newBoardTitle, setNewBoardTitle] = useState('');
 
   useEffect(() => {
     async function fetchBoards() {
-      const response = await axios.get('http://localhost:5000/boards');
+      const response = await axios.get(`${LOCALHOST}/boards`);
       setBoards(response.data);
     }
     fetchBoards();
@@ -20,7 +26,7 @@ function App() {
   async function updateBoards(updatedBoards) {
     setBoards(updatedBoards);
     for (const board of updatedBoards) {
-      await axios.put(`http://localhost:5000/boards/${board._id}`, board);
+      await axios.put(`${LOCALHOST}/boards/${board._id}`, board);
     }
   }
 
@@ -110,13 +116,37 @@ function App() {
   }
 
   async function newBoard() {
+    if (newBoardTitle.trim() === '') return;
+
     const newBoard = {
-      title: 'New Board',
+      title: newBoardTitle,
       items: [],
     };
 
-    const response = await axios.post('http://localhost:5000/boards', newBoard);
+    const response = await axios.post(`${LOCALHOST}/boards`, newBoard);
     setBoards([...boards, response.data]);
+    setNewBoardTitle('');
+  }
+
+  function handleTitleInputChange(boardId, value) {
+    setNewTitle((prev) => ({ ...prev, [boardId]: value }));
+  }
+
+  async function handleTitleChange(boardId) {
+    try {
+      const updatedBoards = boards.map((board) =>
+        board._id === boardId ? { ...board, title: newTitle[boardId] } : board
+      );
+      setBoards(updatedBoards);
+
+      await axios.put(`${LOCALHOST}/boards/${boardId}`, {
+        ...updatedBoards.find((board) => board._id === boardId),
+      });
+
+      setIsEditingTitle((prev) => ({ ...prev, [boardId]: false }));
+    } catch (error) {
+      console.error('Failed to update board title:', error);
+    }
   }
 
   const handleInputChange = (boardId, value) => {
@@ -132,10 +162,44 @@ function App() {
             onDragOver={dragOverHandler}
             onDrop={(e) => dropHandler(e, board)}
           >
-            <div className="board__title">{board.title}</div>
+            <div className="board__title">
+              {isEditingTitle[board._id] ? (
+                <input
+                  type="text"
+                  value={newTitle[board._id] || board.title}
+                  onChange={(e) =>
+                    handleTitleInputChange(board._id, e.target.value)
+                  }
+                  onBlur={() => handleTitleChange(board._id)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleTitleChange(board._id);
+                    }
+                  }}
+                />
+              ) : (
+                <div
+                  onClick={() => {
+                    setIsEditingTitle((prev) => ({
+                      ...prev,
+                      [board._id]: true,
+                    }));
+                    setNewTitle((prev) => ({
+                      ...prev,
+                      [board._id]: board.title,
+                    }));
+                  }}
+                >
+                  {board.title}
+                </div>
+              )}
+              <EditIcon />
+            </div>
+
             <div className="board__items">
               {board.items.map((item, index) => (
                 <TaskCard
+                  description={item.titleDetails}
                   key={item.id}
                   board={board}
                   item={item}
@@ -172,9 +236,15 @@ function App() {
             </div>
           </div>
         ))}
-        <button className="new-board" onClick={newBoard}>
-          Add Board
-        </button>
+        <div className="new-board-section">
+          <input
+            type="text"
+            value={newBoardTitle}
+            onChange={(e) => setNewBoardTitle(e.target.value)}
+            placeholder="Enter new board title..."
+          />
+          <button onClick={newBoard}>Create Board</button>
+        </div>
       </div>
     </div>
   );
