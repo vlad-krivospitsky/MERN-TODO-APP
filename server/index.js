@@ -1,5 +1,4 @@
 const express = require('express');
-// const mongoose = require('mongoose');
 const cors = require('cors');
 
 const Employee = require('./models/Employee');
@@ -15,28 +14,10 @@ app.use(cors());
 
 connectDB();
 
-app.post('/login', (req, res) => {
-  const { email, password } = req.body;
-  Employee.findOne({ email, password }).then((user) => {
-    if (user) {
-      if (user.password === password) {
-        res.json('success');
-      } else {
-        res.json('wrong password');
-      }
-    } else {
-      res.json('No record existed');
-    }
-  });
-});
-
-app.post('/register', (req, res) => {
+app.post('/register', async (req, res) => {
   Employee.create(req.body)
     .then((employees) => res.json(employees))
     .catch((err) => res.json(err));
-});
-
-app.post('/register', async (req, res) => {
   const { name, password } = req.body;
 
   if (!name || !password) {
@@ -60,6 +41,21 @@ app.post('/register', async (req, res) => {
       .status(500)
       .json({ error: 'Error registering user', details: error.message });
   }
+});
+
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+  Employee.findOne({ email, password }).then((user) => {
+    if (user) {
+      if (user.password === password) {
+        res.json('success');
+      } else {
+        res.json('wrong password');
+      }
+    } else {
+      res.json('No record existed');
+    }
+  });
 });
 
 app.post('/login', async (req, res) => {
