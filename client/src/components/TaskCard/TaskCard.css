@@ -1,0 +1,22 @@
+.task-card {
+  position: relative;
+  /* Add other styles for your card */
+}
+
+.task-card__header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 5px;
+}
+
+.task-card__delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: red; /* Change color if needed */
+}
+
+.task-card__description {
+  /* Add styles for your task description */
+}

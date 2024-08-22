@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import EditIcon from '@mui/icons-material/Edit';
-import TaskCard from './components/TaskCard';
-import { LOCALHOST } from './config';
-// import AuthForm from './components/AuthForm/AuthForm';
-import './App.css';
+import TaskCard from '../TaskCard/TaskCard';
+import { LOCALHOST } from '../../config';
+import './Todo.css';
 
-function App() {
+function Todo() {
   const [boards, setBoards] = useState([]);
   const [currentBoard, setCurrentBoard] = useState(null);
   const [currentItem, setCurrentItem] = useState(null);
@@ -14,7 +14,7 @@ function App() {
   const [isEditingTitle, setIsEditingTitle] = useState({});
   const [newTitle, setNewTitle] = useState({});
   const [newBoardTitle, setNewBoardTitle] = useState('');
-
+  let isLogin = 0;
   useEffect(() => {
     async function fetchBoards() {
       const response = await axios.get(`${LOCALHOST}/boards`);
@@ -154,6 +154,9 @@ function App() {
   };
   return (
     <div className="wrapper">
+      <Link to="/" className="logout-btn">
+        Log Out
+      </Link>
       <div className="app">
         {boards.map((board) => (
           <div
@@ -236,7 +239,7 @@ function App() {
             </div>
           </div>
         ))}
-        <div className="new-board-section">
+        <div className="new-board-section board">
           <input
             type="text"
             value={newBoardTitle}
@@ -250,4 +253,4 @@ function App() {
   );
 }
 
-export default App;
+export default Todo;

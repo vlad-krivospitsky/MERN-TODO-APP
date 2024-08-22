@@ -1,0 +1,251 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  background-color: #3f6b8f;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.app {
+  width: 100%;
+  min-width: 100vw;
+  height: auto;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  background-color: rgb(34, 60, 99);
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+.board {
+  min-width: 350px;
+  min-height: 450px;
+  padding: 20px 0;
+  margin: 30px;
+  border: 5px solid transparent;
+  border-radius: 12px;
+  background-color: #5184d14b;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  position: relative;
+  text-align: center;
+}
+
+.board__title {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.board__title svg {
+  font-size: 0.5em;
+  margin-left: 5px;
+}
+.board__items {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.board__items.drag-over {
+  margin-bottom: 20px;
+}
+
+.board__item {
+  width: 95%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  cursor: grab;
+  background-color: #282d31;
+  color: #fff;
+}
+
+.board__item:last-of-type {
+  margin-bottom: 20px;
+}
+
+.board__footer {
+  margin-top: auto;
+  margin-left: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.board__footer input {
+  flex: 0.95;
+  padding: 5px;
+  border: 0;
+  border-radius: 5px;
+}
+
+button,
+input {
+  padding: 5px;
+  border: 0;
+  border-radius: 5px;
+}
+
+button {
+  font-family: inherit;
+  color: #fff;
+  background-color: #3f6b8f;
+  cursor: pointer;
+}
+
+button:hover,
+button:focus {
+  background-color: #629de9;
+}
+
+button:active {
+  background-color: #355b7e;
+}
+
+.new-board {
+  padding: 10px 20px;
+  background-color: #3487ca;
+}
+
+.delete-btn {
+  margin-left: 10px;
+}
+.delete-btn svg {
+  width: 0.6em;
+  height: 0.6em;
+}
+
+.btn-wrapper {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.btn-wrapper button {
+  margin: 0 auto;
+}
+
+.add-btn {
+  width: 2.5em;
+  font-size: 1.3em;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.btn-wrapper {
+  position: relative;
+}
+
+.delete-btn {
+  margin-left: 5px;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 5px 10px;
+  border: 0;
+  border-radius: 10px;
+}
+
+.done-card {
+  text-decoration: line-through;
+}
+
+.parent {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  grid-column-gap: 15px;
+  grid-row-gap: 15px;
+}
+
+.new-board-section button {
+  padding: 5px 10px;
+  margin-left: 5px;
+  border-radius: 10px;
+}
+
+.new-board-section.board {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  border: 5px solid #305183;
+}
+.new-board-section.board input {
+  margin-bottom: 20px;
+}
+
+.logout-btn {
+  width: 100px;
+  margin: 10px;
+  margin-bottom: 100px;
+
+  padding: 5px 10px;
+  border-radius: 10px;
+  background-color: transparent;
+  color: #fff;
+  text-decoration: none;
+  border: 2px solid #fff;
+}
+
+.logout-btn:hover {
+  border: 3px solid #fff;
+}
+
+.logout-btn:focus {
+  color: #fff;
+  background-color: #000;
+  border: 3px solid #000;
+}
+
+.board__item:hover {
+  background-color: #1b1d1f;
+}
+
+.board__item:active {
+  color: #000;
+  font-weight: 500;
+  background-color: #bebebe;
+  border: transparent;
+}
+
+.wrapper {
+  position: relative;
+  padding-top: 50px; /* Add space at the top to ensure content doesn't overlap with the logout button */
+}
+
+.logout-btn {
+  position: absolute;
+  top: 20px; /* Distance from the top edge */
+  left: 80px; /* Distance from the left edge */
+  z-index: 1000; /* Ensure it's on top of other content */
+}
+
+.app {
+  margin-top: 50px; /* Space below the logout button */
+}
