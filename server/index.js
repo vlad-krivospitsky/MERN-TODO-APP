@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const Employee = require('./models/Employee');
 const User = require('./models/User');
 const Board = require('./models/Board');
@@ -15,9 +16,6 @@ app.use(cors());
 connectDB();
 
 app.post('/register', async (req, res) => {
-  Employee.create(req.body)
-    .then((employees) => res.json(employees))
-    .catch((err) => res.json(err));
   const { name, password } = req.body;
 
   if (!name || !password) {
@@ -34,7 +32,13 @@ app.post('/register', async (req, res) => {
     const newUser = new User({ name, password: hashedPassword });
     await newUser.save();
 
-    res.status(201).json({ message: 'User registered successfully' });
+    const employee = await Employee.create(req.body);
+
+    res.status(201).json({ 
+      message: 'User registered successfully', 
+      user: newUser,
+      employee
+    });
   } catch (error) {
     console.error('Registration error:', error.message);
     res
@@ -56,30 +60,6 @@ app.post('/login', (req, res) => {
       res.json('No record existed');
     }
   });
-});
-
-app.post('/login', async (req, res) => {
-  const { name, password } = req.body;
-
-  if (!name || !password) {
-    return res.status(400).json({ error: 'Name and password are required' });
-  }
-
-  try {
-    const user = await User.findOne({ name });
-    if (!user) return res.status(400).json({ error: 'User not found' });
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ error: 'Invalid credentials' });
-
-    const token = jwt.sign({ id: user._id }, 'your_jwt_secret', {
-      expiresIn: '1h',
-    });
-    res.json({ token });
-  } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ error: 'Error logging in' });
-  }
 });
 
 app.get('/boards', async (req, res) => {
@@ -119,6 +99,36 @@ app.put('/boards/:id', async (req, res) => {
   }
 });
 
+app.delete('/boards/:id', async (req, res) => {
+  try {
+    const boardId = req.params.id;
+    await Board.findByIdAndDelete(boardId);
+    res.status(200).json({ message: 'Board deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting board:', error);
+    res.status(500).json({ message: 'Failed to delete board' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
+// const express = require('express');
+// const cors = require('cors');
+// const connectDB = require('./config/db');
+// const routes = require('./routes/routes');
+
+// const app = express();
+// const PORT = 5000;
+
+// app.use(express.json());
+// app.use(cors());
+
+// connectDB();
+
+// app.use('/', routes);
+
+// app.listen(PORT, () => {
+//   console.log(`Server running on http://localhost:${PORT}`);
+// });
