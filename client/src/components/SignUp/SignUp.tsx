@@ -18,7 +18,7 @@ export default function SignUp() {
       .then((result) => {
         setMessage(result.data.message);
         setError('');
-        setTimeout(() => { navigate('/login') }, 2000);
+        setTimeout(() => { navigate('/login') }, 1500);
       })
       .catch((err) => {
         if (err.response) {

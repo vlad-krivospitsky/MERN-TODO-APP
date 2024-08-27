@@ -27,7 +27,6 @@ const AuthForm: React.FC = () => {
         password,
       });
       localStorage.setItem('token', response.data.token);
-      alert('Login successful');
     } catch (error) {
       console.error('Login error:', error);
       alert('Login failed');

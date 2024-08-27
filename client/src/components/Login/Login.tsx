@@ -15,7 +15,7 @@ export default function Login() {
     axios
       .post(`${LOCALHOST}/login`, { email, password })
       .then((result) => {
-        if (result.data.message === 'success') {
+        if (result.data.success === true) {
           navigate('/todo');
         } else {
           setMessage(result.data.message); 
@@ -28,7 +28,7 @@ export default function Login() {
           } else if (err.response.status === 400 && err.response.data.message === 'Password cannot be empty') {
             setMessage('Email and password cannot be empty.');
           } else if (err.response.status === 400) {
-            setMessage('Empty email field or no record existed. Please register first.');
+            setMessage('Empty field(s) or no record existed. Please register first.');
           }
         } else {
           setMessage('An unexpected error occurred. Please try again.');

@@ -2,8 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const Employee = require('./models/Employee');
-const User = require('./models/User');
+const User = require('./models/User'); // Import User model
 const Board = require('./models/Board');
 const connectDB = require('./config/db');
 
@@ -21,12 +20,14 @@ app.post('/register', async (req, res) => {
   if (!name || !email || !password) {
     return res.status(400).json({ error: 'Name, email, and password are required' });
   }
-const passwordValidationRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-if (!passwordValidationRegex.test(password)) {
-  return res.status(400).json({
-    error: 'Password must be at least 8 characters long, contain at least one uppercase letter, one number, and one special character.'
-  });
-}
+
+  const passwordValidationRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  if (!passwordValidationRegex.test(password)) {
+    return res.status(400).json({
+      error: 'Password must be at least 8 characters long, contain at least one uppercase letter, one number, and one special character.'
+    });
+  }
+
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -47,26 +48,30 @@ if (!passwordValidationRegex.test(password)) {
   }
 });
 
-
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
-  if (!password) {
-    return res.status(400).json({ message: 'Password cannot be empty' });
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Email and password are required' });
   }
 
-  Employee.findOne({ email }).then((user) => {
-    if (user) {
-      if (user.password === password) {
-        res.status(200).json({ message: 'success' });
-      } else {
-        res.status(401).json({ message: 'Invalid password' });
-      }
-    } else {
-      res.status(400).json({ message: 'No record existed' });
-    }
-  });
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ message: 'User not found' });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
+
+    const token = jwt.sign({ id: user._id }, 'your_jwt_secret', {
+      expiresIn: '1h',
+    });
+    res.json({ success: true, token }); // Updated response format
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ error: 'Error logging in' });
+  }
 });
+
 
 app.get('/boards', async (req, res) => {
   try {
@@ -104,6 +109,7 @@ app.put('/boards/:id', async (req, res) => {
     res.status(500).json({ error: 'Error updating board' });
   }
 });
+
 app.delete('/boards/:id', async (req, res) => {
   try {
     const boardId = req.params.id;
@@ -118,22 +124,3 @@ app.delete('/boards/:id', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
-
-// const express = require('express');
-// const cors = require('cors');
-// const connectDB = require('./config/db');
-// const routes = require('./routes/routes');
-
-// const app = express();
-// const PORT = 5000;
-
-// app.use(express.json());
-// app.use(cors());
-
-// connectDB();
-
-// app.use('/', routes);
-
-// app.listen(PORT, () => {
-//   console.log(`Server running on http://localhost:${PORT}`);
-// });
