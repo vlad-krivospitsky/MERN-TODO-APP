@@ -1,3 +1,4 @@
+
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -6,18 +7,32 @@ import { LOCALHOST } from '../../config';
 export default function Login() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [message, setMessage] = useState<string>(''); 
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     axios
       .post(`${LOCALHOST}/login`, { email, password })
       .then((result) => {
-        if (result.data === 'success') {
+        if (result.data.message === 'success') {
           navigate('/todo');
+        } else {
+          setMessage(result.data.message); 
         }
       })
       .catch((err) => {
+        if (err.response) {
+          if (err.response.status === 401) {
+            setMessage('Invalid password. Please try again.');
+          } else if (err.response.status === 400 && err.response.data.message === 'Password cannot be empty') {
+            setMessage('Email and password cannot be empty.');
+          } else if (err.response.status === 400) {
+            setMessage('Empty email field or no record existed. Please register first.');
+          }
+        } else {
+          setMessage('An unexpected error occurred. Please try again.');
+        }
         console.log(err);
       });
   };
@@ -69,9 +84,10 @@ export default function Login() {
             Login
           </button>
         </form>
+        {message && <p className="mt-3 text-center text-danger">{message}</p>}
         <Link
           to="/register"
-          className="btn btn-default border w-100 bg-light rounded-0"
+          className="btn btn-default border w-100 bg-light rounded-0 mt-3"
         >
           Register
         </Link>

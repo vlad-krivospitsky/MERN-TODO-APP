@@ -7,15 +7,28 @@ export default function SignUp() {
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');  
+  const [message, setMessage] = useState<string>(''); 
+  const [error, setError] = useState<string>(''); 
   const navigate = useNavigate();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     axios
       .post(`${LOCALHOST}/register`, { name, email, password })
-      .then((result) => console.log(result))
-      .catch((err) => console.log(err));
-    navigate('/');
+      .then((result) => {
+        setMessage(result.data.message);
+        setError('');
+        setTimeout(() => { navigate('/login') }, 2000);
+      })
+      .catch((err) => {
+        if (err.response) {
+          setError(err.response.data.error);
+          setMessage('');
+        } else {
+          setError('An unexpected error occurred. Please try again.');
+          setMessage('');
+        }
+      });
   };
 
   return (
@@ -33,9 +46,7 @@ export default function SignUp() {
               autoComplete="off"
               name="name"
               className="form-control rounded-0"
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setName(e.target.value)
-              }
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
             />
           </div>
           <div className="mb-3">
@@ -48,9 +59,7 @@ export default function SignUp() {
               autoComplete="off"
               name="email"
               className="form-control rounded-0"
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setEmail(e.target.value)
-              }
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
             />
           </div>
           <div className="mb-3">
@@ -63,25 +72,20 @@ export default function SignUp() {
               autoComplete="off"
               name="password"
               className="form-control rounded-0"
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setPassword(e.target.value)
-              }
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
             />
           </div>
           <button
             type="submit"
             className="btn btn-success w-100 rounded-0"
-            style={{
-              backgroundColor: '#3f6b8f',
-            }}
+            style={{ backgroundColor: '#3f6b8f' }}
           >
             Register
           </button>
         </form>
-        <Link
-          to="/"
-          className="btn btn-default border w-100 bg-light rounded-0"
-        >
+        {message && <p className="mt-3 text-center fw-bold text-success">{message}</p>}
+        {error && <p className="mt-3 text-center fw-bold text-danger">{error}</p>}
+        <Link to="/" className="btn btn-default border w-100 bg-light rounded-0">
           Login
         </Link>
       </div>

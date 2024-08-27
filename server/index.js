@@ -16,48 +16,54 @@ app.use(cors());
 connectDB();
 
 app.post('/register', async (req, res) => {
-  const { name, password } = req.body;
+  const { name, email, password } = req.body;
 
-  if (!name || !password) {
-    return res.status(400).json({ error: 'Name and password are required' });
+  if (!name || !email || !password) {
+    return res.status(400).json({ error: 'Name, email, and password are required' });
   }
-
+const passwordValidationRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+if (!passwordValidationRegex.test(password)) {
+  return res.status(400).json({
+    error: 'Password must be at least 8 characters long, contain at least one uppercase letter, one number, and one special character.'
+  });
+}
   try {
-    const existingUser = await User.findOne({ name });
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ error: 'User already exists' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ name, password: hashedPassword });
+    const newUser = new User({ name, email, password: hashedPassword });
     await newUser.save();
 
-    const employee = await Employee.create(req.body);
-
     res.status(201).json({ 
-      message: 'User registered successfully', 
-      user: newUser,
-      employee
+      message: 'User registered successfully',
+      user: newUser
     });
   } catch (error) {
     console.error('Registration error:', error.message);
-    res
-      .status(500)
-      .json({ error: 'Error registering user', details: error.message });
+    res.status(500).json({ error: 'Error registering user', details: error.message });
   }
 });
 
+
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
-  Employee.findOne({ email, password }).then((user) => {
+
+  if (!password) {
+    return res.status(400).json({ message: 'Password cannot be empty' });
+  }
+
+  Employee.findOne({ email }).then((user) => {
     if (user) {
       if (user.password === password) {
-        res.json('success');
+        res.status(200).json({ message: 'success' });
       } else {
-        res.json('wrong password');
+        res.status(401).json({ message: 'Invalid password' });
       }
     } else {
-      res.json('No record existed');
+      res.status(400).json({ message: 'No record existed' });
     }
   });
 });
@@ -98,7 +104,6 @@ app.put('/boards/:id', async (req, res) => {
     res.status(500).json({ error: 'Error updating board' });
   }
 });
-
 app.delete('/boards/:id', async (req, res) => {
   try {
     const boardId = req.params.id;

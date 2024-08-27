@@ -52,6 +52,7 @@ const Todo: React.FC = () => {
     e.currentTarget.classList.add('drag-over');
   }
 
+
   function dragLeaveHandler(e: React.DragEvent<HTMLDivElement>) {
     e.currentTarget.classList.remove('drag-over');
   }
