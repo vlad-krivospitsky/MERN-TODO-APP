@@ -5,9 +5,8 @@
 @media (max-width: 768px) {
 .bg-white.p-3 {
     width: 50% !important;
+    }
 }
-  }
-  
 @media (max-width: 425px) {
     .bg-white.p-3 {
         width: 80% !important;

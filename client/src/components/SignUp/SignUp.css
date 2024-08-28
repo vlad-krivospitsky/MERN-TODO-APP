@@ -2,13 +2,13 @@
     .bg-white.p-3 {
         width: 40% !important;
     }
+}
 @media (max-width: 768px) {
 .bg-white.p-3 {
     width: 60% !important;
+    }
 }
-  }
-  
-  @media (max-width: 576px) {
+@media (max-width: 576px) {
     .bg-white.p-3 {
         width: 70% !important;
     }
