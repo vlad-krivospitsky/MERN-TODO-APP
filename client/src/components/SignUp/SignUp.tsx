@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import axios from 'axios';
 import { LOCALHOST } from '../../config';
+import './SignUp.css';
 
 export default function SignUp() {
   const [name, setName] = useState<string>('');

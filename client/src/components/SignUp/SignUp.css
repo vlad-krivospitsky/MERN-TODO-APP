@@ -1,0 +1,20 @@
+@media (max-width: 1024px) {
+    .bg-white.p-3 {
+        width: 40% !important;
+    }
+@media (max-width: 768px) {
+.bg-white.p-3 {
+    width: 60% !important;
+}
+  }
+  
+  @media (max-width: 576px) {
+    .bg-white.p-3 {
+        width: 70% !important;
+    }
+}
+@media (max-width: 425px) {
+    .bg-white.p-3 {
+        width: 90% !important;
+    }
+}

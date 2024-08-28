@@ -245,16 +245,38 @@ button:active {
 
 .wrapper {
   position: relative;
-  padding-top: 50px; /* Add space at the top to ensure content doesn't overlap with the logout button */
+  padding-top: 50px; 
 }
 
 .logout-btn {
   position: absolute;
-  top: 20px; /* Distance from the top edge */
-  left: 80px; /* Distance from the left edge */
-  z-index: 1000; /* Ensure it's on top of other content */
+  top: 20px; 
+  left: 80px;
+  z-index: 1000; 
 }
 
 .app {
-  margin-top: 50px; /* Space below the logout button */
+  margin-top: 50px; 
+}
+
+@media screen and (max-width: 320px) {
+  .board {
+    min-width: 275px;
+
+  }
+  .board__item span{
+  font-size: 14px;
+  }
+  .board__footer {
+    margin-left: 0px;
+    display: block;
+  }
+  .add-btn {
+    margin-top: 10px;
+  }
+  .logout-btn {
+    position: absolute;
+    top: 5px;
+    left: 10px;
+}
 }
